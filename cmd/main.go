@@ -9,6 +9,8 @@ import (
 	"strings"
 )
 
+const port string = "8080"
+
 func main() {
 	go func() {
 		reader := bufio.NewReader(os.Stdin)
@@ -39,5 +41,6 @@ func main() {
 		fmt.Println("Got time: " + time)
 		w.Write([]byte("Received time: " + time))
 	})
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	fmt.Println("Started listening on port: " + port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
