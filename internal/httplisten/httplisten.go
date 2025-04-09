@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-const port string = "8080"
+const listenPort string = "8080"
 
 func StartTimeListen() {
 	http.HandleFunc("/setTime", func(w http.ResponseWriter, r *http.Request) {
@@ -25,6 +25,6 @@ func StartTimeListen() {
 		fmt.Println("Got time: " + time)
 		w.Write([]byte("Received time: " + time))
 	})
-	fmt.Println("Started listening on port: " + port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	fmt.Println("Started listening on port: " + listenPort)
+	log.Fatal(http.ListenAndServe(":"+listenPort, nil))
 }

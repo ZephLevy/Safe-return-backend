@@ -9,8 +9,6 @@ import (
 	"github.com/ZephLevy/Safe-return-backend/internal/httplisten"
 )
 
-const port string = "8080"
-
 func main() {
 	go func() {
 		reader := bufio.NewReader(os.Stdin)
