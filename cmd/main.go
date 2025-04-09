@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ZephLevy/Safe-return-backend/internal/envloader"
 	"github.com/ZephLevy/Safe-return-backend/internal/httplisten"
 )
 
@@ -22,5 +23,6 @@ func main() {
 			}
 		}
 	}()
+	envloader.Load(".env")
 	httplisten.StartTimeListen()
 }
