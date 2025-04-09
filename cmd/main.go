@@ -6,11 +6,10 @@ import (
 	"os"
 	"strings"
 
-	timelisten "github.com/ZephLevy/Safe-return-backend/internal"
+	"github.com/ZephLevy/Safe-return-backend/internal/httplisten"
 )
 
 const port string = "8080"
-const postgresPort string = "5432"
 
 func main() {
 	go func() {
@@ -25,6 +24,5 @@ func main() {
 			}
 		}
 	}()
-
-	timelisten.StartListen()
+	httplisten.StartTimeListen()
 }

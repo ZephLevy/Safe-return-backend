@@ -1,4 +1,4 @@
-package timelisten
+package httplisten
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 
 const port string = "8080"
 
-func StartListen() {
+func StartTimeListen() {
 	http.HandleFunc("/setTime", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
