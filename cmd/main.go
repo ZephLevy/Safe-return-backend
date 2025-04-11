@@ -30,15 +30,14 @@ func main() {
 	err := envloader.Load(".env")
 	if err != nil {
 		log.Fatalln("Had error reading environment variables:", err)
-	} else {
-		conn, err := db.Connect()
-		if err != nil {
-			// Right now, while the app is in development, I don't require a db connection most of the time
-			// This should be replaced by log.fatal later though
-			fmt.Println("Error conecting to database")
-		}
-		defer conn.Close(context.Background())
 	}
+	conn, err := db.Connect()
+	if err != nil {
+		// Right now, while the app is in development, I don't require a db connection most of the time
+		// This should be replaced by log.fatal later though
+		fmt.Println("Error conecting to database")
+	}
+	defer conn.Close(context.Background())
 
 	httplisten.StartTimeListen()
 }
