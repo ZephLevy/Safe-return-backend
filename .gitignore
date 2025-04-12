@@ -25,3 +25,6 @@ go.work.sum
 .env
 
 .DS_Store
+
+# Apparently I'm not supposed to push this
+nginx.conf
