@@ -15,7 +15,7 @@ func Connect() (*pgx.Conn, error) {
 	name := os.Getenv("DB_NAME")
 	password := os.Getenv("DB_PASSWORD")
 
-	for _, val := range []interface{}{host, port, user, name, password} {
+	for _, val := range []any{host, port, user, name, password} {
 		if val == nil {
 			return nil, fmt.Errorf("One or more of the environment variables was nil")
 		}
