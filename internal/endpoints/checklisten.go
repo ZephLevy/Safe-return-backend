@@ -1,14 +1,13 @@
-package httplisten
+package endpoints
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 )
 
 const listenPort string = "8080"
 
-func StartTimeListen() {
+func startCheckListen() {
 	http.HandleFunc("/setTime", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -25,6 +24,4 @@ func StartTimeListen() {
 		fmt.Println("Got time: " + time)
 		w.Write([]byte("Received time: " + time))
 	})
-	fmt.Println("Started listening on port: " + listenPort)
-	log.Fatal(http.ListenAndServe(":"+listenPort, nil))
 }

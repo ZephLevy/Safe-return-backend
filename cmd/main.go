@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/ZephLevy/Safe-return-backend/internal/db"
+	"github.com/ZephLevy/Safe-return-backend/internal/endpoints"
 	"github.com/ZephLevy/Safe-return-backend/internal/envloader"
-	"github.com/ZephLevy/Safe-return-backend/internal/httplisten"
 )
 
 func main() {
@@ -39,5 +39,5 @@ func main() {
 	}
 	defer conn.Close(context.Background())
 
-	httplisten.StartTimeListen()
+	endpoints.OpenEndpoints()
 }
