@@ -21,6 +21,11 @@ func startCheckListen() {
 
 		time := r.Form.Get("time")
 
+		if time == "" {
+			http.Error(w, "Bad request", http.StatusBadRequest)
+			return
+		}
+
 		fmt.Println("Got time: " + time)
 		w.Write([]byte("Received time: " + time))
 	})
