@@ -5,8 +5,6 @@ import (
 	"net/http"
 )
 
-const listenPort string = "8080"
-
 func startCheckListen() {
 	http.HandleFunc("/setTime", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {

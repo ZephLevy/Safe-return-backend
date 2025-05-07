@@ -27,4 +27,4 @@ go.work.sum
 .DS_Store
 
 # Apparently I'm not supposed to push this
-nginx.conf
+nginx

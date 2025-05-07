@@ -6,6 +6,10 @@ import (
 	"net/http"
 )
 
+const (
+	listenPort = "8080"
+)
+
 func OpenEndpoints() {
 	startLoginListen()
 	startCheckListen()
