@@ -16,8 +16,8 @@ func Connect() (*pgx.Conn, error) {
 	password := os.Getenv("DB_PASSWORD")
 
 	for _, val := range []any{host, port, user, name, password} {
-		if val == nil {
-			return nil, fmt.Errorf("One or more of the environment variables was nil")
+		if val == nil || val == "" {
+			return nil, fmt.Errorf("One or more of the environment variables was empty")
 		}
 	}
 	conn, err := pgx.Connect(context.Background(), fmt.Sprintf("postgres://%s:%s@%s:%s/%s", user, password, host, port, name))

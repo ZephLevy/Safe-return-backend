@@ -35,7 +35,7 @@ func main() {
 	if err != nil {
 		// Right now, while the app is in development, I don't require a db connection most of the time
 		// This should be replaced by log.fatal later though
-		fmt.Println("Error conecting to database")
+		fmt.Println("Error conecting to database", err)
 	}
 	defer conn.Close(context.Background())
 
