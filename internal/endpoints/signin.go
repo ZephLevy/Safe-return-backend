@@ -18,7 +18,7 @@ func startLoginListen() {
 			return
 		}
 
-		username := r.Form.Get("username")
+		username := r.Form.Get("email")
 		password := r.Form.Get("password")
 
 		if username == "" || password == "" {
