@@ -18,6 +18,7 @@ services:
             POSTGRES_DB: ${DB_NAME}
         volumes:
             - db-data:/var/lib/postgresql/data
+            - ./db:/docker-entrypoint-initdb.d
 
 volumes:
     db-data:
