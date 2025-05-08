@@ -4,5 +4,12 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
-    passwordHash VARCHAR(50) NOT NULL
+    passwordHash TEXT NOT NULL
+);
+
+CREATE TABLE emergency_contacts (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    phone_number TEXT NOT NULL
 );
