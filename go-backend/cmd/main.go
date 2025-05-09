@@ -4,13 +4,11 @@ import (
 	"bufio"
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
 	"github.com/ZephLevy/Safe-return-backend/internal/db"
 	"github.com/ZephLevy/Safe-return-backend/internal/endpoints"
-	"github.com/ZephLevy/Safe-return-backend/internal/envloader"
 )
 
 func main() {
@@ -27,10 +25,6 @@ func main() {
 			}
 		}
 	}()
-	err := envloader.Load(".env")
-	if err != nil {
-		log.Fatalln("Had error reading environment variables:", err)
-	}
 	conn, err := db.Connect()
 	if err != nil {
 		// Right now, while the app is in development, I don't require a db connection most of the time
@@ -39,5 +33,5 @@ func main() {
 	}
 	defer conn.Close(context.Background())
 
-	endpoints.OpenEndpoints()
+	endpoints.OpenEndpoints(conn)
 }
