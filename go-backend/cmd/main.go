@@ -4,11 +4,13 @@ import (
 	"bufio"
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 
 	"github.com/ZephLevy/Safe-return-backend/internal/db"
 	"github.com/ZephLevy/Safe-return-backend/internal/endpoints"
+	"github.com/ZephLevy/Safe-return-backend/internal/service"
 )
 
 func main() {
@@ -29,9 +31,11 @@ func main() {
 	if err != nil {
 		// Right now, while the app is in development, I don't require a db connection most of the time
 		// This should be replaced by log.fatal later though
-		fmt.Println("Error conecting to database", err)
+		log.Fatalf("Error connecting to db: %v", err)
 	}
 	defer conn.Close(context.Background())
 
-	endpoints.OpenEndpoints(conn)
+	UserRepository := db.NewUserRepo(conn)
+	UserService := service.NewUserService(UserRepository)
+	endpoints.OpenEndpoints(UserService)
 }

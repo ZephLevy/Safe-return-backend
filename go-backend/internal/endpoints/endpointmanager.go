@@ -5,15 +5,15 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/ZephLevy/Safe-return-backend/internal/service"
 )
 
 const (
 	listenPort = "8080"
 )
 
-func OpenEndpoints(conn *pgx.Conn) {
-	startLoginListen(conn)
+func OpenEndpoints(userService *service.UserService) {
+	startLoginListen(userService)
 	startCheckListen()
 	fmt.Println("Started listening on port: " + listenPort)
 	log.Fatal(http.ListenAndServe(":"+listenPort, nil))
