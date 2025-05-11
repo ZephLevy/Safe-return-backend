@@ -23,7 +23,20 @@ func startLoginListen(userService *service.UserService) {
 
 		err = userService.SignIn(r.Context(), email, password)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusUnauthorized)
+			var errorCode int
+			var errorMessage string
+			switch err.Error() {
+			case "Missing fields":
+				errorCode = http.StatusUnauthorized
+				errorMessage = "Missing required fields"
+			case "Email already in use":
+				errorCode = http.StatusConflict
+				errorMessage = "Email already in use"
+			default:
+				errorCode = http.StatusInternalServerError
+				errorMessage = "Internal Server Error"
+			}
+			http.Error(w, errorMessage, errorCode)
 			return
 		}
 
