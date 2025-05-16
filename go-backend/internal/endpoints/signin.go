@@ -18,11 +18,12 @@ func startLoginListen(userService *service.UserService) {
 			http.Error(w, "Bad request", http.StatusBadRequest)
 			return
 		}
-
+		firstName := r.FormValue("firstName")
+		lastName := r.FormValue("lastName")
 		email := r.FormValue("email")
 		password := r.FormValue("password")
 
-		err = userService.SignIn(r.Context(), email, password)
+		err = userService.SignIn(r.Context(), firstName, lastName, email, password)
 		if err != nil {
 			var errorCode int
 			var errorMessage string

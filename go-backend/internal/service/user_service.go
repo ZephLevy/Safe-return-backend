@@ -20,8 +20,13 @@ func NewUserService(ur *db.UserRepository) *UserService {
 	return &UserService{repo: ur}
 }
 
-func (us *UserService) SignIn(ctx context.Context, email string, password string) error {
-	if email == "" || password == "" {
+func (us *UserService) SignIn(ctx context.Context,
+	firstName string,
+	lastName string,
+	email string,
+	password string,
+) error {
+	if firstName == "" || email == "" || password == "" {
 		return fmt.Errorf("Missing fields")
 	}
 
@@ -34,7 +39,7 @@ func (us *UserService) SignIn(ctx context.Context, email string, password string
 		return fmt.Errorf("Email already in use")
 	}
 
-	token, err := us.repo.CreateAccount(ctx, email, string(hashedPassword[:]))
+	token, err := us.repo.CreateAccount(ctx, firstName, lastName, email, string(hashedPassword[:]))
 	if err != nil {
 		return err
 	}

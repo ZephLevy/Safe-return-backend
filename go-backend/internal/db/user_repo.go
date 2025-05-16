@@ -24,9 +24,17 @@ func (ur *UserRepository) IsEmailUnique(ctx context.Context, email string) (bool
 	return !row.Next(), nil
 }
 
-func (ur *UserRepository) CreateAccount(ctx context.Context, email string, passwordHash string) (string, error) {
-	query := "INSERT INTO users (email, password_hash) VALUES ($1, $2)"
-	_, err := ur.db.Exec(ctx, query, email, passwordHash)
+func (ur *UserRepository) CreateAccount(ctx context.Context,
+	firstName string,
+	lastName string,
+	email string,
+	passwordHash string,
+) (string, error) {
+	query := `
+		INSERT INTO users (first_name, last_name, email, password_hash)
+	 	VALUES ($1, $2, $3, $4)
+	 `
+	_, err := ur.db.Exec(ctx, query, firstName, lastName, email, passwordHash)
 	if err != nil {
 		return "", err
 	}
