@@ -23,3 +23,13 @@ func (ur *UserRepository) IsEmailUnique(ctx context.Context, email string) (bool
 
 	return !row.Next(), nil
 }
+
+func (ur *UserRepository) CreateAccount(ctx context.Context, email string, passwordHash string) (string, error) {
+	query := "INSERT INTO users (email, password_hash) VALUES ($1, $2)"
+	_, err := ur.db.Exec(ctx, query, email, passwordHash)
+	if err != nil {
+		return "", err
+	}
+	// TODO: Generate bearer and refresh tokens
+	return "randomstringblablabla", nil
+}

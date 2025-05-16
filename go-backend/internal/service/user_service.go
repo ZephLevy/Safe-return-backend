@@ -2,10 +2,14 @@ package service
 
 import (
 	"context"
-	"crypto/sha256"
 	"fmt"
 
 	"github.com/ZephLevy/Safe-return-backend/internal/db"
+	"golang.org/x/crypto/bcrypt"
+)
+
+const (
+	HashCost = 12
 )
 
 type UserService struct {
@@ -21,9 +25,7 @@ func (us *UserService) SignIn(ctx context.Context, email string, password string
 		return fmt.Errorf("Missing fields")
 	}
 
-	// TODO: Use bcrypt for hashing
-	hashedPassword := sha256.Sum256([]byte(password))
-	_ = hashedPassword
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), HashCost)
 	isUnique, err := us.repo.IsEmailUnique(ctx, email)
 	if err != nil {
 		return fmt.Errorf("db error: %w", err)
@@ -31,6 +33,11 @@ func (us *UserService) SignIn(ctx context.Context, email string, password string
 	if !isUnique {
 		return fmt.Errorf("Email already in use")
 	}
-	// TODO: create account
+
+	token, err := us.repo.CreateAccount(ctx, email, string(hashedPassword[:]))
+	if err != nil {
+		return err
+	}
+	_ = token
 	return nil
 }

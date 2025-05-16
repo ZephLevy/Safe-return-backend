@@ -1,6 +1,7 @@
 package endpoints
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/ZephLevy/Safe-return-backend/internal/service"
@@ -35,6 +36,7 @@ func startLoginListen(userService *service.UserService) {
 			default:
 				errorCode = http.StatusInternalServerError
 				errorMessage = "Internal Server Error"
+				fmt.Println("Error signing in: " + err.Error())
 			}
 			http.Error(w, errorMessage, errorCode)
 			return

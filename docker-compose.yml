@@ -8,8 +8,6 @@ services:
         depends_on:
             - db
             - go-backend
-        env_file:
-            - .env
         
     db:
         image: postgres:alpine
