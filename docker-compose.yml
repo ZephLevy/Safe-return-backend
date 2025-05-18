@@ -20,6 +20,7 @@ services:
         volumes:
             - db-data:/var/lib/postgresql/data
             - ./db:/docker-entrypoint-initdb.d
+
     go-backend:
         build: ./go-backend
         ports:
@@ -32,5 +33,10 @@ services:
             - DB_PASSWORD=${DB_PASSWORD}
             - DB_PORT=${DB_PORT}
             - DB_HOST=db
+
+    redis:
+        image: redis:alpine
+        ports:
+            - "6379:6379"
 volumes:
     db-data:
