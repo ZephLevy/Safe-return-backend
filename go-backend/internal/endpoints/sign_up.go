@@ -22,8 +22,9 @@ func startSignUpListen(userService *service.UserService) {
 		lastName := r.FormValue("lastName")
 		email := r.FormValue("email")
 		password := r.FormValue("password")
+		emailOTP := r.FormValue("emailCode")
 
-		err = userService.SignIn(r.Context(), firstName, lastName, email, password)
+		err = userService.SignIn(r.Context(), firstName, lastName, email, password, emailOTP)
 		if err != nil {
 			var errorCode int
 			var errorMessage string
@@ -34,6 +35,9 @@ func startSignUpListen(userService *service.UserService) {
 			case "Email already in use":
 				errorCode = http.StatusConflict
 				errorMessage = "Email already in use"
+			case "Incorrect code":
+				errorCode = http.StatusBadRequest
+				errorMessage = "Incorrect one time code"
 			default:
 				errorCode = http.StatusInternalServerError
 				errorMessage = "Internal Server Error"

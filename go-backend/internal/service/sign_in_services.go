@@ -13,6 +13,7 @@ func (us *UserService) SignIn(ctx context.Context,
 	lastName string,
 	email string,
 	password string,
+	emailOTP string,
 ) error {
 	if firstName == "" || email == "" || password == "" {
 		return fmt.Errorf("Missing fields")
@@ -25,6 +26,15 @@ func (us *UserService) SignIn(ctx context.Context,
 	}
 	if !isUnique {
 		return fmt.Errorf("Email already in use")
+	}
+
+	validEmail, err := us.repo.VerifyEmailOTP(ctx, email, emailOTP)
+	if err != nil {
+		return err
+	}
+
+	if !validEmail {
+		return fmt.Errorf("Incorrect code")
 	}
 
 	token, err := us.repo.CreateAccount(ctx, firstName, lastName, email, string(hashedPassword[:]))
@@ -53,6 +63,6 @@ func (us *UserService) VerifyEmail(ctx context.Context, email string) (bool, str
 	// (stored in redis)
 	// I'll just make it 111111 for now
 	// until I set up sending via SMTP
-
+	us.repo.SetEmailOTP(ctx, email, "111111")
 	return true, ""
 }

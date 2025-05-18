@@ -2,16 +2,24 @@ package db
 
 import (
 	"context"
+	"time"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/redis/go-redis/v9"
 )
 
 type UserRepository struct {
-	db *pgx.Conn
+	db    *pgx.Conn
+	cache *redis.Client
 }
 
 func NewUserRepo(db *pgx.Conn) *UserRepository {
-	return &UserRepository{db: db}
+	cache := redis.NewClient(&redis.Options{
+		Addr:     "redis:6379",
+		Password: "",
+		DB:       0,
+	})
+	return &UserRepository{db: db, cache: cache}
 }
 
 func (ur *UserRepository) IsEmailUnique(ctx context.Context, email string) (bool, error) {
@@ -40,4 +48,21 @@ func (ur *UserRepository) CreateAccount(ctx context.Context,
 	}
 	// TODO: Generate bearer and refresh tokens
 	return "randomstringblablabla", nil
+}
+
+func (ur *UserRepository) SetEmailOTP(ctx context.Context, email string, passcode string) {
+	ur.cache.Set(ctx, email, passcode, time.Minute*5)
+}
+
+func (ur *UserRepository) VerifyEmailOTP(
+	ctx context.Context,
+	email string,
+	potentialPass string,
+) (bool, error) {
+	pass, err := ur.cache.Get(ctx, email).Result()
+	if err != nil {
+		return false, err
+	}
+
+	return pass == potentialPass, nil
 }
