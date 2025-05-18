@@ -8,7 +8,7 @@ import (
 )
 
 func startSignUpListen(userService *service.UserService) {
-	http.HandleFunc("/signUp", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/auth/signup", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
