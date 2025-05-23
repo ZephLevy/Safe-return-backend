@@ -28,12 +28,12 @@ func (us *UserService) SignIn(ctx context.Context,
 		return fmt.Errorf("Email already in use")
 	}
 
-	validEmail, err := us.repo.VerifyEmailOTP(ctx, email, emailOTP)
+	correctCode, err := us.repo.VerifyEmailOTP(ctx, email, emailOTP)
 	if err != nil {
 		return err
 	}
 
-	if !validEmail {
+	if !correctCode {
 		return fmt.Errorf("Incorrect code")
 	}
 
