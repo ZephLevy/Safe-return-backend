@@ -41,13 +41,13 @@ func startSignUpListen(userService *service.UserService) {
 			default:
 				errorCode = http.StatusInternalServerError
 				errorMessage = "Internal Server Error"
-				fmt.Println("Error signing in: " + err.Error())
+				fmt.Println("Error signing up: " + err.Error())
 			}
 			http.Error(w, errorMessage, errorCode)
 			return
 		}
 
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("Login successful"))
+		w.Write([]byte("Signup successful"))
 	})
 }
