@@ -6,7 +6,7 @@ import (
 	"github.com/ZephLevy/Safe-return-backend/internal/service"
 )
 
-func startEmailVerificationListen(userService *service.UserService) {
+func registerEmailAuthHandler(userService *service.UserService) {
 	http.HandleFunc("/auth/verify-email", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)

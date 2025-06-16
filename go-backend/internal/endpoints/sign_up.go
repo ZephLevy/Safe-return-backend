@@ -7,7 +7,7 @@ import (
 	"github.com/ZephLevy/Safe-return-backend/internal/service"
 )
 
-func startSignUpListen(userService *service.UserService) {
+func registerSignUpHandler(userService *service.UserService) {
 	http.HandleFunc("/auth/signup", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)

@@ -1,3 +1,5 @@
+name: safe-return-backend
+
 services:
     nginx:
         image: nginx:alpine

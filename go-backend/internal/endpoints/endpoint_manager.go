@@ -13,9 +13,9 @@ const (
 )
 
 func OpenEndpoints(userService *service.UserService) {
-	startSignUpListen(userService)
-	startEmailVerificationListen(userService)
-	startCheckListen()
+	registerSignUpHandler(userService)
+	registerEmailAuthHandler(userService)
+	registerCheckHandler()
 	fmt.Println("Started listening on port: " + listenPort)
 	log.Fatal(http.ListenAndServe(":"+listenPort, nil))
 }
