@@ -29,8 +29,6 @@ func main() {
 	}()
 	conn, err := db.Connect()
 	if err != nil {
-		// Right now, while the app is in development, I don't require a db connection most of the time
-		// This should be replaced by log.fatal later though
 		log.Fatalf("Error connecting to db: %v", err)
 	}
 	defer conn.Close(context.Background())
