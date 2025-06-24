@@ -13,6 +13,11 @@ import (
 	"github.com/ZephLevy/Safe-return-backend/internal/service"
 )
 
+// @title Safe Return Backend
+// @version 1.0
+// @description APIs for every action to do with Safe Return.
+// @BasePath /
+
 func main() {
 
 	go func() {

@@ -1,0 +1,66 @@
+basePath: /
+info:
+  contact: {}
+  description: APIs for every action to do with Safe Return.
+  title: Safe Return Backend
+  version: "1.0"
+paths:
+  /auth/signup:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: Creates a new user account using name, email, password, and a one-time
+        email code.
+      parameters:
+      - description: First Name
+        in: formData
+        name: firstName
+        required: true
+        type: string
+      - description: Last Name
+        in: formData
+        name: lastName
+        required: true
+        type: string
+      - description: Email
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: Password
+        in: formData
+        name: password
+        required: true
+        type: string
+      - description: Email OTP Code
+        in: formData
+        name: emailCode
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Signup successful
+          schema:
+            type: string
+        "400":
+          description: Incorrect one time code / Bad request
+          schema:
+            type: string
+        "401":
+          description: Missing required fields
+          schema:
+            type: string
+        "409":
+          description: Email already in use
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Sign up a new user
+      tags:
+      - Auth
+swagger: "2.0"

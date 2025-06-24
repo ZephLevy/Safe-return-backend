@@ -6,6 +6,9 @@ import (
 	"net/http"
 
 	"github.com/ZephLevy/Safe-return-backend/internal/service"
+
+	_ "github.com/ZephLevy/Safe-return-backend/docs"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 const (
@@ -17,5 +20,10 @@ func OpenEndpoints(userService *service.UserService) {
 	registerEmailAuthHandler(userService)
 	registerCheckHandler()
 	fmt.Println("Started listening on port: " + listenPort)
+
+	http.Handle("/swagger/", httpSwagger.Handler(
+		httpSwagger.URL("http://localhost:8080/swagger/doc.json"),
+	))
+
 	log.Fatal(http.ListenAndServe(":"+listenPort, nil))
 }

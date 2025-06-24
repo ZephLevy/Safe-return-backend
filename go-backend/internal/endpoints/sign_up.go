@@ -7,6 +7,24 @@ import (
 	"github.com/ZephLevy/Safe-return-backend/internal/service"
 )
 
+// registerSignUpHandler sets up the signup endpoint
+//
+// @Summary Sign up a new user
+// @Description Creates a new user account using name, email, password, and a one-time email code.
+// @Tags Auth
+// @Accept application/x-www-form-urlencoded
+// @Produce plain
+// @Param firstName formData string true "First Name"
+// @Param lastName formData string true "Last Name"
+// @Param email formData string true "Email"
+// @Param password formData string true "Password"
+// @Param emailCode formData string true "Email OTP Code"
+// @Success 200 {string} string "Signup successful"
+// @Failure 400 {string} string "Incorrect one time code / Bad request"
+// @Failure 401 {string} string "Missing required fields"
+// @Failure 409 {string} string "Email already in use"
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /auth/signup [post]
 func registerSignUpHandler(userService *service.UserService) {
 	http.HandleFunc("/auth/signup", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
