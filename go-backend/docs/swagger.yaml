@@ -20,7 +20,6 @@ paths:
       - description: Last Name
         in: formData
         name: lastName
-        required: true
         type: string
       - description: Email
         in: formData

@@ -40,8 +40,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Last Name",
                         "name": "lastName",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     },
                     {
                         "type": "string",

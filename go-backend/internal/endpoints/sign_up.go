@@ -15,7 +15,7 @@ import (
 // @Accept application/x-www-form-urlencoded
 // @Produce plain
 // @Param firstName formData string true "First Name"
-// @Param lastName formData string true "Last Name"
+// @Param lastName formData string false "Last Name"
 // @Param email formData string true "Email"
 // @Param password formData string true "Password"
 // @Param emailCode formData string true "Email OTP Code"
