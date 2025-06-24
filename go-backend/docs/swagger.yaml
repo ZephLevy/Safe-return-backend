@@ -51,6 +51,10 @@ paths:
           description: Missing required fields
           schema:
             type: string
+        "405":
+          description: Method not allowed
+          schema:
+            type: string
         "409":
           description: Email already in use
           schema:
@@ -60,6 +64,48 @@ paths:
           schema:
             type: string
       summary: Sign up a new user
+      tags:
+      - Auth
+  /auth/verify-email:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: Checks if an email is valid and not already in use. Responds with
+        plain text.
+      parameters:
+      - description: Email
+        in: formData
+        name: email
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Email valid
+          schema:
+            type: string
+        "400":
+          description: Invalid email
+          schema:
+            type: string
+        "401":
+          description: Missing required fields
+          schema:
+            type: string
+        "405":
+          description: Method not allowed
+          schema:
+            type: string
+        "409":
+          description: Email already in use
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Verify email for signup
       tags:
       - Auth
 swagger: "2.0"

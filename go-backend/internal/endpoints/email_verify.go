@@ -6,6 +6,21 @@ import (
 	"github.com/ZephLevy/Safe-return-backend/internal/service"
 )
 
+// registerEmailAuthHandler sets up an endpoint for verifying up an email
+//
+// @Summary Verify email for signup
+// @Description Checks if an email is valid and not already in use. Responds with plain text.
+// @Tags Auth
+// @Accept application/x-www-form-urlencoded
+// @Produce text/plain
+// @Param email formData string true "Email"
+// @Success 200 {string} string "Email valid"
+// @Failure 400 {string} string "Invalid email"
+// @Failure 401 {string} string "Missing required fields"
+// @Failure 405 {string} string "Method not allowed"
+// @Failure 409 {string} string "Email already in use"
+// @Failure 500 {string} string "Internal server error"
+// @Router /auth/verify-email [post]
 func registerEmailAuthHandler(userService *service.UserService) {
 	http.HandleFunc("/auth/verify-email", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
