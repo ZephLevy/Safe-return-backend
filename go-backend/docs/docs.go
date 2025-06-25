@@ -83,6 +83,12 @@ const docTemplate = `{
                             "type": "string"
                         }
                     },
+                    "403": {
+                        "description": "Email not verified / OTP expired",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     "405": {
                         "description": "Method not allowed",
                         "schema": {

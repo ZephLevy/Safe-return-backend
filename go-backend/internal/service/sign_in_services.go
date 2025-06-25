@@ -8,7 +8,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (us *UserService) SignIn(ctx context.Context,
+func (us *UserService) SignUp(ctx context.Context,
 	firstName string,
 	lastName string,
 	email string,
@@ -30,6 +30,9 @@ func (us *UserService) SignIn(ctx context.Context,
 
 	correctCode, err := us.repo.VerifyEmailOTP(ctx, email, emailOTP)
 	if err != nil {
+		if err.Error() == "redis: nil" {
+			return fmt.Errorf("Email unknown")
+		}
 		return err
 	}
 

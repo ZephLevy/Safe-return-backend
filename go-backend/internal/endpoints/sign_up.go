@@ -22,6 +22,7 @@ import (
 // @Success 200 {string} string "Signup successful"
 // @Failure 400 {string} string "Incorrect one time code / Bad request"
 // @Failure 401 {string} string "Missing required fields
+// @Failure 403 {string} string "Email not verified / OTP expired"
 // @Failure 405 {string} string "Method not allowed"
 // @Failure 409 {string} string "Email already in use"
 // @Failure 500 {string} string "Internal Server Error"
@@ -43,7 +44,7 @@ func registerSignUpHandler(userService *service.UserService) {
 		password := r.FormValue("password")
 		emailOTP := r.FormValue("emailCode")
 
-		err = userService.SignIn(r.Context(), firstName, lastName, email, password, emailOTP)
+		err = userService.SignUp(r.Context(), firstName, lastName, email, password, emailOTP)
 		if err != nil {
 			var errorCode int
 			var errorMessage string
@@ -57,6 +58,9 @@ func registerSignUpHandler(userService *service.UserService) {
 			case "Incorrect code":
 				errorCode = http.StatusBadRequest
 				errorMessage = "Incorrect one time code"
+			case "Email unknown":
+				errorCode = http.StatusForbidden
+				errorMessage = "Email not verified or the password has expired"
 			default:
 				errorCode = http.StatusInternalServerError
 				errorMessage = "Internal Server Error"
