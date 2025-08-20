@@ -14,38 +14,37 @@ func (us *UserService) SignUp(ctx context.Context,
 	email string,
 	password string,
 	emailOTP string,
-) error {
+) (string, string, error) {
 	if firstName == "" || email == "" || password == "" {
-		return fmt.Errorf("Missing fields")
+		return "", "", fmt.Errorf("Missing fields")
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), HashCost)
 	isUnique, err := us.repo.IsEmailUnique(ctx, email)
 	if err != nil {
-		return fmt.Errorf("db error: %w", err)
+		return "", "", fmt.Errorf("db error: %w", err)
 	}
 	if !isUnique {
-		return fmt.Errorf("Email already in use")
+		return "", "", fmt.Errorf("Email already in use")
 	}
 
 	correctCode, err := us.repo.VerifyEmailOTP(ctx, email, emailOTP)
 	if err != nil {
 		if err.Error() == "redis: nil" {
-			return fmt.Errorf("Email unknown")
+			return "", "", fmt.Errorf("Email unknown")
 		}
-		return err
+		return "", "", err
 	}
 
 	if !correctCode {
-		return fmt.Errorf("Incorrect code")
+		return "", "", fmt.Errorf("Incorrect code")
 	}
 
-	token, err := us.repo.CreateAccount(ctx, firstName, lastName, email, string(hashedPassword[:]))
+	accessToken, refreshToken, err := us.repo.CreateAccount(ctx, firstName, lastName, email, string(hashedPassword[:]))
 	if err != nil {
-		return err
+		return "", "", err
 	}
-	_ = token
-	return nil
+	return accessToken, refreshToken, nil
 }
 
 func (us *UserService) VerifyEmail(ctx context.Context, email string) (bool, string) {

@@ -1,76 +1,108 @@
 package endpoints
 
 import (
-	"fmt"
+	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/ZephLevy/Safe-return-backend/internal/service"
 )
+
+type SignUpRequest struct {
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	EmailOTP  string `json:"emailCode"`
+}
+
+type SignUpResponse struct {
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
+}
+
+type ErrorResponse struct {
+	Error string `json:"error"`
+}
+
+func writeJSONError(w http.ResponseWriter, code int, message string) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+	json.NewEncoder(w).Encode(ErrorResponse{Error: message})
+}
 
 // registerSignUpHandler sets up the signup endpoint
 //
 // @Summary Sign up a new user
 // @Description Creates a new user account using name, email, password, and a one-time email code.
 // @Tags Auth
-// @Accept application/x-www-form-urlencoded
-// @Produce plain
-// @Param firstName formData string true "First Name"
-// @Param lastName formData string false "Last Name"
-// @Param email formData string true "Email"
-// @Param password formData string true "Password"
-// @Param emailCode formData string true "Email OTP Code"
-// @Success 200 {string} string "Signup successful"
-// @Failure 400 {string} string "Incorrect one time code / Bad request"
-// @Failure 401 {string} string "Missing required fields
-// @Failure 403 {string} string "Email not verified / OTP expired"
-// @Failure 405 {string} string "Method not allowed"
-// @Failure 409 {string} string "Email already in use"
-// @Failure 500 {string} string "Internal Server Error"
+// @Accept application/json
+// @Produce application/json
+// @Param request body SignUpRequest true "SignUp request payload"
+// @Success 200 {object} SignUpResponse "Signup successful, returns access and refresh tokens"
+// @Failure 400 {object} ErrorResponse "Incorrect one-time code or bad request"
+// @Failure 401 {object} ErrorResponse "Missing required fields"
+// @Failure 403 {object} ErrorResponse "Email not verified / OTP expired"
+// @Failure 405 {object} ErrorResponse "Method not allowed"
+// @Failure 409 {object} ErrorResponse "Email already in use"
+// @Failure 500 {object} ErrorResponse "Internal Server Error"
 // @Router /auth/signup [post]
 func registerSignUpHandler(userService *service.UserService) {
 	http.HandleFunc("/auth/signup", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodPost {
-			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-			return
-		}
-		err := r.ParseForm()
-		if err != nil {
-			http.Error(w, "Bad request", http.StatusBadRequest)
-			return
-		}
-		firstName := r.FormValue("firstName")
-		lastName := r.FormValue("lastName")
-		email := r.FormValue("email")
-		password := r.FormValue("password")
-		emailOTP := r.FormValue("emailCode")
+		w.Header().Set("Content-Type", "application/json")
 
-		err = userService.SignUp(r.Context(), firstName, lastName, email, password, emailOTP)
+		if r.Method != http.MethodPost {
+			writeJSONError(w, http.StatusMethodNotAllowed, "Method not allowed")
+			return
+		}
+
+		var req SignUpRequest
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			writeJSONError(w, http.StatusBadRequest, "Bad request")
+			return
+		}
+
+		accessToken, refreshToken, err := userService.SignUp(
+			r.Context(),
+			req.FirstName,
+			req.LastName,
+			req.Email,
+			req.Password,
+			req.EmailOTP,
+		)
+
 		if err != nil {
-			var errorCode int
-			var errorMessage string
+			var code int
+			var message string
+
 			switch err.Error() {
 			case "Missing fields":
-				errorCode = http.StatusUnauthorized
-				errorMessage = "Missing required fields"
+				code = http.StatusUnauthorized
+				message = "Missing required fields"
 			case "Email already in use":
-				errorCode = http.StatusConflict
-				errorMessage = "Email already in use"
+				code = http.StatusConflict
+				message = "Email already in use"
 			case "Incorrect code":
-				errorCode = http.StatusBadRequest
-				errorMessage = "Incorrect one time code"
+				code = http.StatusBadRequest
+				message = "Incorrect one-time code"
 			case "Email unknown":
-				errorCode = http.StatusForbidden
-				errorMessage = "Email not verified or the password has expired"
+				code = http.StatusForbidden
+				message = "Email not verified or OTP expired"
 			default:
-				errorCode = http.StatusInternalServerError
-				errorMessage = "Internal Server Error"
-				fmt.Println("Error signing up: " + err.Error())
+				code = http.StatusInternalServerError
+				message = "Internal Server Error"
+				log.Println("Unexpected signup error:", err)
 			}
-			http.Error(w, errorMessage, errorCode)
+
+			writeJSONError(w, code, message)
 			return
 		}
 
+		// Success response
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("Signup successful"))
+		json.NewEncoder(w).Encode(SignUpResponse{
+			AccessToken:  accessToken,
+			RefreshToken: refreshToken,
+		})
 	})
 }

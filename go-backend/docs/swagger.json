@@ -12,10 +12,10 @@
             "post": {
                 "description": "Creates a new user account using name, email, password, and a one-time email code.",
                 "consumes": [
-                    "application/x-www-form-urlencoded"
+                    "application/json"
                 ],
                 "produces": [
-                    "text/plain"
+                    "application/json"
                 ],
                 "tags": [
                     "Auth"
@@ -23,81 +23,56 @@
                 "summary": "Sign up a new user",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "First Name",
-                        "name": "firstName",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Last Name",
-                        "name": "lastName",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Email",
-                        "name": "email",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Password",
-                        "name": "password",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Email OTP Code",
-                        "name": "emailCode",
-                        "in": "formData",
-                        "required": true
+                        "description": "SignUp request payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/endpoints.SignUpRequest"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Signup successful",
+                        "description": "Signup successful, returns access and refresh tokens",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/endpoints.SignUpResponse"
                         }
                     },
                     "400": {
-                        "description": "Incorrect one time code / Bad request",
+                        "description": "Incorrect one-time code or bad request",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/endpoints.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Missing required fields",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/endpoints.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Email not verified / OTP expired",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/endpoints.ErrorResponse"
                         }
                     },
                     "405": {
                         "description": "Method not allowed",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/endpoints.ErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Email already in use",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/endpoints.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/endpoints.ErrorResponse"
                         }
                     }
                 }
@@ -162,6 +137,47 @@
                             "type": "string"
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "endpoints.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "endpoints.SignUpRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "emailCode": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "endpoints.SignUpResponse": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
                 }
             }
         }

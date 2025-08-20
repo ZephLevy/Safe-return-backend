@@ -1,4 +1,30 @@
 basePath: /
+definitions:
+  endpoints.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  endpoints.SignUpRequest:
+    properties:
+      email:
+        type: string
+      emailCode:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      password:
+        type: string
+    type: object
+  endpoints.SignUpResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
 info:
   contact: {}
   description: APIs for every action to do with Safe Return.
@@ -8,65 +34,47 @@ paths:
   /auth/signup:
     post:
       consumes:
-      - application/x-www-form-urlencoded
+      - application/json
       description: Creates a new user account using name, email, password, and a one-time
         email code.
       parameters:
-      - description: First Name
-        in: formData
-        name: firstName
+      - description: SignUp request payload
+        in: body
+        name: request
         required: true
-        type: string
-      - description: Last Name
-        in: formData
-        name: lastName
-        type: string
-      - description: Email
-        in: formData
-        name: email
-        required: true
-        type: string
-      - description: Password
-        in: formData
-        name: password
-        required: true
-        type: string
-      - description: Email OTP Code
-        in: formData
-        name: emailCode
-        required: true
-        type: string
+        schema:
+          $ref: '#/definitions/endpoints.SignUpRequest'
       produces:
-      - text/plain
+      - application/json
       responses:
         "200":
-          description: Signup successful
+          description: Signup successful, returns access and refresh tokens
           schema:
-            type: string
+            $ref: '#/definitions/endpoints.SignUpResponse'
         "400":
-          description: Incorrect one time code / Bad request
+          description: Incorrect one-time code or bad request
           schema:
-            type: string
+            $ref: '#/definitions/endpoints.ErrorResponse'
         "401":
           description: Missing required fields
           schema:
-            type: string
+            $ref: '#/definitions/endpoints.ErrorResponse'
         "403":
           description: Email not verified / OTP expired
           schema:
-            type: string
+            $ref: '#/definitions/endpoints.ErrorResponse'
         "405":
           description: Method not allowed
           schema:
-            type: string
+            $ref: '#/definitions/endpoints.ErrorResponse'
         "409":
           description: Email already in use
           schema:
-            type: string
+            $ref: '#/definitions/endpoints.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            type: string
+            $ref: '#/definitions/endpoints.ErrorResponse'
       summary: Sign up a new user
       tags:
       - Auth

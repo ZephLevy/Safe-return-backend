@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/ZephLevy/Safe-return-backend/internal/auth"
 	"github.com/jackc/pgx/v5"
 	"github.com/redis/go-redis/v9"
 )
@@ -37,17 +38,25 @@ func (ur *UserRepository) CreateAccount(ctx context.Context,
 	lastName string,
 	email string,
 	passwordHash string,
-) (string, error) {
+) (string, string, error) {
 	query := `
 		INSERT INTO users (first_name, last_name, email, password_hash)
 	 	VALUES ($1, $2, $3, $4)
+	 	RETURNING id
 	 `
-	_, err := ur.db.Exec(ctx, query, firstName, lastName, email, passwordHash)
+
+	var userID int
+	err := ur.db.QueryRow(ctx, query, firstName, lastName, email, passwordHash).Scan(&userID)
 	if err != nil {
-		return "", err
+		return "", "", err
+	}
+
+	accessToken, refreshToken, err := auth.GenerateTokens(string(userID))
+	if err != nil {
+		return "", "", err
 	}
 	// TODO: Generate bearer and refresh tokens
-	return "randomstringblablabla", nil
+	return accessToken, refreshToken, nil
 }
 
 func (ur *UserRepository) SetEmailOTP(ctx context.Context, email string, passcode string) {
