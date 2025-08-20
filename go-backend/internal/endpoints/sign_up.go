@@ -21,16 +21,6 @@ type SignUpResponse struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
-type ErrorResponse struct {
-	Error string `json:"error"`
-}
-
-func writeJSONError(w http.ResponseWriter, code int, message string) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(code)
-	json.NewEncoder(w).Encode(ErrorResponse{Error: message})
-}
-
 // registerSignUpHandler sets up the signup endpoint
 //
 // @Summary Sign up a new user
@@ -98,7 +88,6 @@ func registerSignUpHandler(userService *service.UserService) {
 			return
 		}
 
-		// Success response
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(SignUpResponse{
 			AccessToken:  accessToken,

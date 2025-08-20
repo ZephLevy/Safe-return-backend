@@ -89,10 +89,10 @@ const docTemplate = `{
             "post": {
                 "description": "Checks if an email is valid and not already in use. Responds with plain text.",
                 "consumes": [
-                    "application/x-www-form-urlencoded"
+                    "application/json"
                 ],
                 "produces": [
-                    "text/plain"
+                    "application/json"
                 ],
                 "tags": [
                     "Auth"
@@ -100,48 +100,50 @@ const docTemplate = `{
                 "summary": "Verify email for signup",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Email",
-                        "name": "email",
-                        "in": "formData",
-                        "required": true
+                        "description": "Email in JSON",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/endpoints.EmailVerifyRequest"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "Email valid",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/endpoints.EmailVerifyResponse"
                         }
                     },
                     "400": {
                         "description": "Invalid email",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/endpoints.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Missing required fields",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/endpoints.ErrorResponse"
                         }
                     },
                     "405": {
                         "description": "Method not allowed",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/endpoints.ErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Email already in use",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/endpoints.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/endpoints.ErrorResponse"
                         }
                     }
                 }
@@ -149,6 +151,22 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "endpoints.EmailVerifyRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "endpoints.EmailVerifyResponse": {
+            "type": "object",
+            "properties": {
+                "response": {
+                    "type": "string"
+                }
+            }
+        },
         "endpoints.ErrorResponse": {
             "type": "object",
             "properties": {

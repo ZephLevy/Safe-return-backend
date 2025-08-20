@@ -1,5 +1,15 @@
 basePath: /
 definitions:
+  endpoints.EmailVerifyRequest:
+    properties:
+      email:
+        type: string
+    type: object
+  endpoints.EmailVerifyResponse:
+    properties:
+      response:
+        type: string
+    type: object
   endpoints.ErrorResponse:
     properties:
       error:
@@ -81,42 +91,43 @@ paths:
   /auth/verify-email:
     post:
       consumes:
-      - application/x-www-form-urlencoded
+      - application/json
       description: Checks if an email is valid and not already in use. Responds with
         plain text.
       parameters:
-      - description: Email
-        in: formData
-        name: email
+      - description: Email in JSON
+        in: body
+        name: request
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/endpoints.EmailVerifyRequest'
       produces:
-      - text/plain
+      - application/json
       responses:
         "200":
           description: Email valid
           schema:
-            type: string
+            $ref: '#/definitions/endpoints.EmailVerifyResponse'
         "400":
           description: Invalid email
           schema:
-            type: string
+            $ref: '#/definitions/endpoints.ErrorResponse'
         "401":
           description: Missing required fields
           schema:
-            type: string
+            $ref: '#/definitions/endpoints.ErrorResponse'
         "405":
           description: Method not allowed
           schema:
-            type: string
+            $ref: '#/definitions/endpoints.ErrorResponse'
         "409":
           description: Email already in use
           schema:
-            type: string
+            $ref: '#/definitions/endpoints.ErrorResponse'
         "500":
           description: Internal server error
           schema:
-            type: string
+            $ref: '#/definitions/endpoints.ErrorResponse'
       summary: Verify email for signup
       tags:
       - Auth
