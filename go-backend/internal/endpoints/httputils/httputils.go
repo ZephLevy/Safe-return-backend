@@ -1,4 +1,4 @@
-package endpoints
+package httputils
 
 import (
 	"encoding/json"
@@ -9,7 +9,7 @@ type ErrorResponse struct {
 	Error string `json:"error"`
 }
 
-func writeJSONError(w http.ResponseWriter, code int, message string) {
+func WriteJSONError(w http.ResponseWriter, code int, message string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	json.NewEncoder(w).Encode(ErrorResponse{Error: message})

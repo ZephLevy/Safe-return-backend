@@ -35,7 +35,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/endpoints.SignUpRequest"
+                            "$ref": "#/definitions/authendpoints.signUpRequest"
                         }
                     }
                 ],
@@ -43,43 +43,43 @@ const docTemplate = `{
                     "200": {
                         "description": "Signup successful, returns access and refresh tokens",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.SignUpResponse"
+                            "$ref": "#/definitions/authendpoints.signUpResponse"
                         }
                     },
                     "400": {
                         "description": "Incorrect one-time code or bad request",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.ErrorResponse"
+                            "$ref": "#/definitions/httputils.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Missing required fields",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.ErrorResponse"
+                            "$ref": "#/definitions/httputils.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Email not verified / OTP expired",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.ErrorResponse"
+                            "$ref": "#/definitions/httputils.ErrorResponse"
                         }
                     },
                     "405": {
                         "description": "Method not allowed",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.ErrorResponse"
+                            "$ref": "#/definitions/httputils.ErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Email already in use",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.ErrorResponse"
+                            "$ref": "#/definitions/httputils.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.ErrorResponse"
+                            "$ref": "#/definitions/httputils.ErrorResponse"
                         }
                     }
                 }
@@ -105,7 +105,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/endpoints.EmailVerifyRequest"
+                            "$ref": "#/definitions/authendpoints.emailVerifyRequest"
                         }
                     }
                 ],
@@ -113,37 +113,37 @@ const docTemplate = `{
                     "200": {
                         "description": "Email valid",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.EmailVerifyResponse"
+                            "$ref": "#/definitions/authendpoints.emailVerifyResponse"
                         }
                     },
                     "400": {
                         "description": "Invalid email",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.ErrorResponse"
+                            "$ref": "#/definitions/httputils.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Missing required fields",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.ErrorResponse"
+                            "$ref": "#/definitions/httputils.ErrorResponse"
                         }
                     },
                     "405": {
                         "description": "Method not allowed",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.ErrorResponse"
+                            "$ref": "#/definitions/httputils.ErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Email already in use",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.ErrorResponse"
+                            "$ref": "#/definitions/httputils.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.ErrorResponse"
+                            "$ref": "#/definitions/httputils.ErrorResponse"
                         }
                     }
                 }
@@ -151,7 +151,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "endpoints.EmailVerifyRequest": {
+        "authendpoints.emailVerifyRequest": {
             "type": "object",
             "properties": {
                 "email": {
@@ -159,7 +159,7 @@ const docTemplate = `{
                 }
             }
         },
-        "endpoints.EmailVerifyResponse": {
+        "authendpoints.emailVerifyResponse": {
             "type": "object",
             "properties": {
                 "response": {
@@ -167,15 +167,7 @@ const docTemplate = `{
                 }
             }
         },
-        "endpoints.ErrorResponse": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                }
-            }
-        },
-        "endpoints.SignUpRequest": {
+        "authendpoints.signUpRequest": {
             "type": "object",
             "properties": {
                 "email": {
@@ -195,13 +187,21 @@ const docTemplate = `{
                 }
             }
         },
-        "endpoints.SignUpResponse": {
+        "authendpoints.signUpResponse": {
             "type": "object",
             "properties": {
                 "access_token": {
                     "type": "string"
                 },
                 "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "httputils.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
                     "type": "string"
                 }
             }

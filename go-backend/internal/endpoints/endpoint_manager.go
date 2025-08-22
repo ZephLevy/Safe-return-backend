@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 
+	authendpoints "github.com/ZephLevy/Safe-return-backend/internal/endpoints/auth-endpoints"
+	userstatusendpoints "github.com/ZephLevy/Safe-return-backend/internal/endpoints/user-status-endpoints"
 	"github.com/ZephLevy/Safe-return-backend/internal/service"
 
 	_ "github.com/ZephLevy/Safe-return-backend/docs"
@@ -16,9 +18,8 @@ const (
 )
 
 func OpenEndpoints(userService *service.UserService) {
-	registerSignUpHandler(userService)
-	registerEmailAuthHandler(userService)
-	registerCheckHandler()
+	authendpoints.OpenAuthEndpoints(userService)
+	userstatusendpoints.OpenUserStatusEndpoints()
 	fmt.Println("Started listening on port: " + listenPort)
 
 	http.Handle("/swagger/", httpSwagger.Handler(

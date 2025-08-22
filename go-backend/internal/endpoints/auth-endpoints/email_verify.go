@@ -1,34 +1,35 @@
-package endpoints
+package authendpoints
 
 import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/ZephLevy/Safe-return-backend/internal/endpoints/httputils"
 	"github.com/ZephLevy/Safe-return-backend/internal/service"
 )
 
-type EmailVerifyRequest struct {
+type emailVerifyRequest struct {
 	Email string `json:"email"`
 }
 
-type EmailVerifyResponse struct {
+type emailVerifyResponse struct {
 	Response string `json:"response"`
 }
 
 // registerEmailAuthHandler sets up an endpoint for verifying up an email
 //
 // @Summary Verify email for signup
-// @Description Checks if an email is valid and not already in use. Responds with plain text.
+// @Description Checks if an email is valid and not already in use.
 // @Tags Auth
 // @Accept application/json
 // @Produce application/json
-// @Param request body EmailVerifyRequest true "Email in JSON"
-// @Success 200 {object} EmailVerifyResponse "Email valid"
-// @Failure 400 {object} ErrorResponse "Invalid email"
-// @Failure 401 {object} ErrorResponse "Missing required fields"
-// @Failure 405 {object} ErrorResponse "Method not allowed"
-// @Failure 409 {object} ErrorResponse "Email already in use"
-// @Failure 500 {object} ErrorResponse "Internal server error"
+// @Param request body emailVerifyRequest true "Email in JSON"
+// @Success 200 {object} emailVerifyResponse "Email valid"
+// @Failure 400 {object} httputils.ErrorResponse "Invalid email"
+// @Failure 401 {object} httputils.ErrorResponse "Missing required fields"
+// @Failure 405 {object} httputils.ErrorResponse "Method not allowed"
+// @Failure 409 {object} httputils.ErrorResponse "Email already in use"
+// @Failure 500 {object} httputils.ErrorResponse "Internal server error"
 // @Router /auth/verify-email [post]
 func registerEmailAuthHandler(userService *service.UserService) {
 	http.HandleFunc("/auth/verify-email", func(w http.ResponseWriter, r *http.Request) {
@@ -37,9 +38,9 @@ func registerEmailAuthHandler(userService *service.UserService) {
 			return
 		}
 
-		var req EmailVerifyRequest
+		var req emailVerifyRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			writeJSONError(w, http.StatusBadRequest, "Bad request")
+			httputils.WriteJSONError(w, http.StatusBadRequest, "Bad request")
 			return
 		}
 
@@ -59,12 +60,12 @@ func registerEmailAuthHandler(userService *service.UserService) {
 			default:
 				statusCode = http.StatusInternalServerError
 			}
-			writeJSONError(w, statusCode, msg)
+			httputils.WriteJSONError(w, statusCode, msg)
 			return
 		}
 
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(EmailVerifyResponse{
+		json.NewEncoder(w).Encode(emailVerifyResponse{
 			Response: "Email verified.",
 		})
 	})

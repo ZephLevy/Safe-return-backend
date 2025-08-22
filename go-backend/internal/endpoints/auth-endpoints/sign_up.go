@@ -1,14 +1,15 @@
-package endpoints
+package authendpoints
 
 import (
 	"encoding/json"
 	"log"
 	"net/http"
 
+	"github.com/ZephLevy/Safe-return-backend/internal/endpoints/httputils"
 	"github.com/ZephLevy/Safe-return-backend/internal/service"
 )
 
-type SignUpRequest struct {
+type signUpRequest struct {
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
 	Email     string `json:"email"`
@@ -16,7 +17,7 @@ type SignUpRequest struct {
 	EmailOTP  string `json:"emailCode"`
 }
 
-type SignUpResponse struct {
+type signUpResponse struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 }
@@ -28,27 +29,27 @@ type SignUpResponse struct {
 // @Tags Auth
 // @Accept application/json
 // @Produce application/json
-// @Param request body SignUpRequest true "SignUp request payload"
-// @Success 200 {object} SignUpResponse "Signup successful, returns access and refresh tokens"
-// @Failure 400 {object} ErrorResponse "Incorrect one-time code or bad request"
-// @Failure 401 {object} ErrorResponse "Missing required fields"
-// @Failure 403 {object} ErrorResponse "Email not verified / OTP expired"
-// @Failure 405 {object} ErrorResponse "Method not allowed"
-// @Failure 409 {object} ErrorResponse "Email already in use"
-// @Failure 500 {object} ErrorResponse "Internal Server Error"
+// @Param request body signUpRequest true "SignUp request payload"
+// @Success 200 {object} signUpResponse "Signup successful, returns access and refresh tokens"
+// @Failure 400 {object} httputils.ErrorResponse "Incorrect one-time code or bad request"
+// @Failure 401 {object} httputils.ErrorResponse "Missing required fields"
+// @Failure 403 {object} httputils.ErrorResponse "Email not verified / OTP expired"
+// @Failure 405 {object} httputils.ErrorResponse "Method not allowed"
+// @Failure 409 {object} httputils.ErrorResponse "Email already in use"
+// @Failure 500 {object} httputils.ErrorResponse "Internal Server Error"
 // @Router /auth/signup [post]
 func registerSignUpHandler(userService *service.UserService) {
 	http.HandleFunc("/auth/signup", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
 		if r.Method != http.MethodPost {
-			writeJSONError(w, http.StatusMethodNotAllowed, "Method not allowed")
+			httputils.WriteJSONError(w, http.StatusMethodNotAllowed, "Method not allowed")
 			return
 		}
 
-		var req SignUpRequest
+		var req signUpRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			writeJSONError(w, http.StatusBadRequest, "Bad request")
+			httputils.WriteJSONError(w, http.StatusBadRequest, "Bad request")
 			return
 		}
 
@@ -84,12 +85,12 @@ func registerSignUpHandler(userService *service.UserService) {
 				log.Println("Unexpected signup error:", err)
 			}
 
-			writeJSONError(w, code, message)
+			httputils.WriteJSONError(w, code, message)
 			return
 		}
 
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(SignUpResponse{
+		json.NewEncoder(w).Encode(signUpResponse{
 			AccessToken:  accessToken,
 			RefreshToken: refreshToken,
 		})

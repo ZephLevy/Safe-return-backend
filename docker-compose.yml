@@ -35,6 +35,7 @@ services:
             - DB_PASSWORD=${DB_PASSWORD}
             - DB_PORT=${DB_PORT}
             - DB_HOST=db
+            - JWT_KEY=${JWT_KEY}
 
     redis:
         image: redis:alpine
