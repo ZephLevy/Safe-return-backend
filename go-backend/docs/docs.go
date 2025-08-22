@@ -87,7 +87,7 @@ const docTemplate = `{
         },
         "/auth/verify-email": {
             "post": {
-                "description": "Checks if an email is valid and not already in use. Responds with plain text.",
+                "description": "Checks if an email is valid and not already in use.",
                 "consumes": [
                     "application/json"
                 ],

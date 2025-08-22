@@ -92,8 +92,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Checks if an email is valid and not already in use. Responds with
-        plain text.
+      description: Checks if an email is valid and not already in use.
       parameters:
       - description: Email in JSON
         in: body
