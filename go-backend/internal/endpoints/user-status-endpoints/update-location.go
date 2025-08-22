@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/ZephLevy/Safe-return-backend/internal/auth"
 	"github.com/ZephLevy/Safe-return-backend/internal/endpoints/httputils"
 )
 
@@ -17,7 +18,9 @@ type locationRequest struct {
 
 // registerUserLocationHandler sets up listening for location
 func registerUserLocationHandler() {
-	http.HandleFunc("/user-status/update-location", func(w http.ResponseWriter, r *http.Request) {
+	locationHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		userID := r.Context().Value(auth.UserIDKey).(string)
 		w.Header().Set("Content-Type", "application/json")
 
 		// POST and not PUT here because we're storing a sequence of locations
@@ -32,7 +35,10 @@ func registerUserLocationHandler() {
 			return
 		}
 
+		// TODO: Actually respond in JSON
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("All ok!"))
+		w.Write([]byte(userID))
 	})
+
+	http.Handle("/user-status/update-location", auth.AuthMiddleware(locationHandler))
 }

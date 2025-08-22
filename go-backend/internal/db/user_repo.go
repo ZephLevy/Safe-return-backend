@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"strconv"
 	"time"
 
 	"github.com/ZephLevy/Safe-return-backend/internal/auth"
@@ -51,11 +52,10 @@ func (ur *UserRepository) CreateAccount(ctx context.Context,
 		return "", "", err
 	}
 
-	accessToken, refreshToken, err := auth.GenerateTokens(string(userID))
+	accessToken, refreshToken, err := auth.GenerateTokens(strconv.Itoa(userID))
 	if err != nil {
 		return "", "", err
 	}
-	// TODO: Generate bearer and refresh tokens
 	return accessToken, refreshToken, nil
 }
 
