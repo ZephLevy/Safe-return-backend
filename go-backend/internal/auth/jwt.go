@@ -38,6 +38,7 @@ func GenerateTokens(userID string) (string, string, error) {
 	}
 	refreshToken, err := jwt.NewWithClaims(jwt.SigningMethodHS256, refreshClaims).SignedString(jwtKey)
 
+	// TODO: Store refresh token in DB
 	return accessToken, refreshToken, nil
 }
 
