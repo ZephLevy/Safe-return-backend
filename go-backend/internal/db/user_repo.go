@@ -40,14 +40,19 @@ func (ur *UserRepository) CreateAccount(ctx context.Context,
 	email string,
 	passwordHash string,
 ) (string, string, error) {
-	query := `
-		INSERT INTO users (first_name, last_name, email, password_hash)
-	 	VALUES ($1, $2, $3, $4)
-	 	RETURNING id
-	 `
+
+	tx, err := ur.db.BeginTx(ctx, pgx.TxOptions{})
+	if err != nil {
+		return "", "", err
+	}
+	defer tx.Rollback(ctx)
 
 	var userID int
-	err := ur.db.QueryRow(ctx, query, firstName, lastName, email, passwordHash).Scan(&userID)
+	err = tx.QueryRow(ctx, `
+		INSERT INTO users (first_name, last_name, email, password_hash)
+		VALUES ($1, $2, $3, $4)
+		RETURNING id
+	`, firstName, lastName, email, passwordHash).Scan(&userID)
 	if err != nil {
 		return "", "", err
 	}
@@ -56,6 +61,19 @@ func (ur *UserRepository) CreateAccount(ctx context.Context,
 	if err != nil {
 		return "", "", err
 	}
+
+	// TODO: Hash the refresh token
+	_, err = tx.Exec(ctx, `
+			UPDATE users SET refresh_token=$1 WHERE id=$2
+		`, refreshToken, userID)
+	if err != nil {
+		return "", "", err
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return "", "", err
+	}
+
 	return accessToken, refreshToken, nil
 }
 
