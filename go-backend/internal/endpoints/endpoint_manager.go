@@ -22,8 +22,8 @@ func OpenEndpoints(userService *service.UserService) {
 	userstatusendpoints.OpenUserStatusEndpoints()
 	fmt.Println("Started listening on port: " + listenPort)
 
-	http.Handle("/swagger/", httpSwagger.Handler(
-		httpSwagger.URL("http://localhost:8080/swagger/doc.json"),
+	http.Handle("/docs/", httpSwagger.Handler(
+		httpSwagger.URL("http://localhost:8080/docs/doc.json"),
 	))
 
 	log.Fatal(http.ListenAndServe(":"+listenPort, nil))
