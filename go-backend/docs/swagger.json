@@ -141,6 +141,63 @@
                     }
                 }
             }
+        },
+        "/user-status/update-location": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Inserts a locationRequest into the db describing location, accuracy, speed, and time",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User-status"
+                ],
+                "summary": "Updates the last known location of a user",
+                "parameters": [
+                    {
+                        "description": "Location updater request payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/userstatusendpoints.locationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Location updated successfully",
+                        "schema": {
+                            "$ref": "#/definitions/userstatusendpoints.locationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - see error message for more detail",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorResponse"
+                        }
+                    },
+                    "405": {
+                        "description": "Method not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -198,6 +255,41 @@
                     "type": "string"
                 }
             }
+        },
+        "userstatusendpoints.locationRequest": {
+            "type": "object",
+            "properties": {
+                "accuracy": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "string"
+                },
+                "longitude": {
+                    "type": "string"
+                },
+                "speed": {
+                    "type": "string"
+                },
+                "time": {
+                    "type": "string"
+                }
+            }
+        },
+        "userstatusendpoints.locationResponse": {
+            "type": "object",
+            "properties": {
+                "response": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

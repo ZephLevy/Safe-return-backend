@@ -35,6 +35,24 @@ definitions:
       error:
         type: string
     type: object
+  userstatusendpoints.locationRequest:
+    properties:
+      accuracy:
+        type: string
+      latitude:
+        type: string
+      longitude:
+        type: string
+      speed:
+        type: string
+      time:
+        type: string
+    type: object
+  userstatusendpoints.locationResponse:
+    properties:
+      response:
+        type: string
+    type: object
 info:
   contact: {}
   description: APIs for every action to do with Safe Return.
@@ -130,4 +148,46 @@ paths:
       summary: Verify email for signup
       tags:
       - Auth
+  /user-status/update-location:
+    post:
+      consumes:
+      - application/json
+      description: Inserts a locationRequest into the db describing location, accuracy,
+        speed, and time
+      parameters:
+      - description: Location updater request payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/userstatusendpoints.locationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Location updated successfully
+          schema:
+            $ref: '#/definitions/userstatusendpoints.locationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputils.ErrorResponse'
+        "401":
+          description: Unauthorized - see error message for more detail
+          schema:
+            $ref: '#/definitions/httputils.ErrorResponse'
+        "405":
+          description: Method not allowed
+          schema:
+            $ref: '#/definitions/httputils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Updates the last known location of a user
+      tags:
+      - User-status
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

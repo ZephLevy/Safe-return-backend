@@ -17,6 +17,9 @@ import (
 // @version 1.0
 // @description APIs for every action to do with Safe Return.
 // @BasePath /
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 
 func main() {
 
