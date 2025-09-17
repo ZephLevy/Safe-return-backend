@@ -53,6 +53,16 @@ definitions:
       response:
         type: string
     type: object
+  userstatusendpoints.setTimeRequest:
+    properties:
+      time:
+        type: string
+    type: object
+  userstatusendpoints.setTimeResponse:
+    properties:
+      message:
+        type: string
+    type: object
 info:
   contact: {}
   description: APIs for every action to do with Safe Return.
@@ -148,6 +158,42 @@ paths:
       summary: Verify email for signup
       tags:
       - Auth
+  /user-status/set-time:
+    post:
+      consumes:
+      - application/json
+      description: Schedules a function to check on the user to see if they are ok
+      parameters:
+      - description: Time encoded in json
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/userstatusendpoints.setTimeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/userstatusendpoints.setTimeResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputils.ErrorResponse'
+        "401":
+          description: Unauthorized - see error message for more detail
+          schema:
+            $ref: '#/definitions/httputils.ErrorResponse'
+        "405":
+          description: Method not allowed
+          schema:
+            $ref: '#/definitions/httputils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Start a user's trip
+      tags:
+      - user-status
   /user-status/update-location:
     post:
       consumes:
@@ -184,7 +230,7 @@ paths:
       - BearerAuth: []
       summary: Updates the last known location of a user
       tags:
-      - User-status
+      - user-status
 securityDefinitions:
   BearerAuth:
     in: header

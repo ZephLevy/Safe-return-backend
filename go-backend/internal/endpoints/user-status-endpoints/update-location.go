@@ -25,7 +25,7 @@ type locationResponse struct {
 //
 // @Summary Updates the last known location of a user
 // @Description Inserts a locationRequest into the db describing location, accuracy, speed, and time
-// @Tags User-status
+// @Tags user-status
 // @Accept application/json
 // @Produce application/json
 // @Param request body locationRequest true "Location updater request payload"

@@ -149,6 +149,63 @@ const docTemplate = `{
                 }
             }
         },
+        "/user-status/set-time": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Schedules a function to check on the user to see if they are ok",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user-status"
+                ],
+                "summary": "Start a user's trip",
+                "parameters": [
+                    {
+                        "description": "Time encoded in json",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/userstatusendpoints.setTimeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/userstatusendpoints.setTimeResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - see error message for more detail",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorResponse"
+                        }
+                    },
+                    "405": {
+                        "description": "Method not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/httputils.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/user-status/update-location": {
             "post": {
                 "security": [
@@ -164,7 +221,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "User-status"
+                    "user-status"
                 ],
                 "summary": "Updates the last known location of a user",
                 "parameters": [
@@ -287,6 +344,22 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "response": {
+                    "type": "string"
+                }
+            }
+        },
+        "userstatusendpoints.setTimeRequest": {
+            "type": "object",
+            "properties": {
+                "time": {
+                    "type": "string"
+                }
+            }
+        },
+        "userstatusendpoints.setTimeResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
                     "type": "string"
                 }
             }
