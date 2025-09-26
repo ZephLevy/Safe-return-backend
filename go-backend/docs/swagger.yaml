@@ -1,5 +1,15 @@
 basePath: /
 definitions:
+  authendpoints.AccountDeletionRequest:
+    properties:
+      password:
+        type: string
+    type: object
+  authendpoints.AccountDeletionResponse:
+    properties:
+      message:
+        type: string
+    type: object
   authendpoints.emailVerifyRequest:
     properties:
       email:
@@ -69,6 +79,38 @@ info:
   title: Safe Return Backend
   version: "1.0"
 paths:
+  /auth/delete-account:
+    post:
+      consumes:
+      - application/json
+      description: Use the Password to delete an account from the database
+      parameters:
+      - description: Deletion request payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/authendpoints.AccountDeletionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Deletion successful
+          schema:
+            $ref: '#/definitions/authendpoints.AccountDeletionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputils.ErrorResponse'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/httputils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete an account
+      tags:
+      - Auth
   /auth/signup:
     post:
       consumes:
