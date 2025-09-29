@@ -14,15 +14,21 @@ Requirements:
 - `docker compose` or `podman-compose`
 
 To run the server, simply run:  
-`docker compose up --build`  
+```sh
+docker compose up --build  
+```
 if you use docker, or  
-`podman-compose up --build`  
+```sh
+podman-compose up --build
+```
 if you use podman.
 
 > [!NOTE]
 > If you're using `podman-compose` without root, then you will get an error message from
 > `nginx`. You can safely ignore this, just add `:8080` to any time you might access localhost
 
-## Endpoint documentation
+## API documentation
 
-The documentation for all the endpoints can be found on `localhost:8080/docs`
+The documentation for all the endpoints can be found on `localhost/docs` while the server is
+running.  
+*(Remember to add the :8080 if you're using Podman!)*
